@@ -5,6 +5,7 @@ import {
   IsEmail,
   IsString,
   IsBoolean,
+  Matches,
 } from 'class-validator';
 import { Match } from '../decorators/match.decorator';
 
@@ -24,6 +25,10 @@ class CreateUserFlukeDTO {
   lasName?: string;
 
   @IsNotEmpty({ message: 'Campo obrigatório' })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/, {
+    message:
+      'senha deve conter: 8 caracteres no mínimo, 1 letra maiúscula no mínimo, 1 número no mínimo e caracter especial no mínimo',
+  })
   @Length(8, 40, { message: 'Senha deve conter no mínimo 8 caracteres' })
   password?: string;
 
