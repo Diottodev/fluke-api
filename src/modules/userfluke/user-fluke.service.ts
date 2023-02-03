@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/PrismaService';
+import CreateUserFlukeDTO from 'src/dtos/create-user-fluke';
 
 @Injectable()
 export class UserFlukeService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createUserFluke: Prisma.UserFlukeCreateInput) {
+  async create(createUserFluke: CreateUserFlukeDTO) {
     const emailExist = await this.prisma.userFluke.findFirst({
       where: {
         email: createUserFluke.email,
@@ -30,7 +31,7 @@ export class UserFlukeService {
     return `This action returns a #${id} module`;
   }
 
-  update(id: number, updateUserFluke: Prisma.UserFlukeUpdateInput) {
+  update(id: number, updateUserFluke: CreateUserFlukeDTO) {
     return `This action updates a #${id} module`;
   }
 

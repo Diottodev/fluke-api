@@ -1,6 +1,6 @@
 import { Test, TestingUserFluke } from '@nestjs/testing';
 import { UserFlukeController } from './user-fluke.controller';
-import { UserFlukeService } from './user-flukeservice';
+import { UserFlukeService } from './user-fluke.service';
 
 describe('UserFlukeController', () => {
   let controller: UserFlukeController;
