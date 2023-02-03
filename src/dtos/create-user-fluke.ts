@@ -3,10 +3,10 @@ import {
   IsDate,
   Length,
   IsEmail,
-  Equals,
   IsString,
   IsBoolean,
 } from 'class-validator';
+import { Match } from '../decorators/match.decorator';
 
 class CreateUserFlukeDTO {
   id?: string;
@@ -28,7 +28,7 @@ class CreateUserFlukeDTO {
   password?: string;
 
   @IsNotEmpty({ message: 'Campo obrigatório' })
-  @Equals('password', { message: 'Senhas não condizem' })
+  @Match('password', { message: 'Senhas não condizem' })
   firmPassword?: string;
 
   @IsNotEmpty({ message: 'Campo obrigatório' })
