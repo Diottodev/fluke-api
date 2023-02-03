@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { Match } from '../decorators/match.decorator';
 
-class CreateUserFlukeDTO {
+class UserFlukeDTO {
   id?: string;
 
   @IsNotEmpty({ message: 'Campo obrigatório' })
@@ -47,4 +47,4 @@ class CreateUserFlukeDTO {
   bio?: string;
 }
 
-export default CreateUserFlukeDTO;
+export default UserFlukeDTO;
