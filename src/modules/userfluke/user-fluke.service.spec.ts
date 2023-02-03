@@ -1,5 +1,5 @@
 import { Test, TestingUserFluke } from '@nestjs/testing';
-import { UserFlukeService } from './user-flukeservice';
+import { UserFlukeService } from './user-fluke.service';
 
 describe('UserFlukeService', () => {
   let service: UserFlukeService;

@@ -7,16 +7,16 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import UserFlukeDTO from 'src/dtos/user-fluke-dto';
 
-import { UserFlukeService } from './user-flukeservice';
+import { UserFlukeService } from './user-fluke.service';
 
 @Controller('user-fluke/vr1')
 export class UserFlukeController {
   constructor(private readonly userFlukeService: UserFlukeService) {}
 
   @Post()
-  create(@Body() createUserFluke: Prisma.UserFlukeCreateInput) {
+  create(@Body() createUserFluke: UserFlukeDTO) {
     return this.userFlukeService.create(createUserFluke);
   }
 
@@ -27,19 +27,16 @@ export class UserFlukeController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userFlukeService.findOne(+id);
+    return this.userFlukeService.findOne(id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateUserFluke: Prisma.UserFlukeUpdateInput,
-  ) {
-    return this.userFlukeService.update(+id, updateUserFluke);
+  update(@Param('id') id: string, @Body() updateUserFluke: UserFlukeDTO) {
+    return this.userFlukeService.update(id, updateUserFluke);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userFlukeService.remove(+id);
+    return this.userFlukeService.remove(id);
   }
 }
