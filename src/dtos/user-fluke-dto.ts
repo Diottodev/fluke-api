@@ -1,11 +1,11 @@
 import {
   IsNotEmpty,
-  IsDate,
   Length,
   IsEmail,
   IsString,
   IsBoolean,
   Matches,
+  IsDateString,
 } from 'class-validator';
 import { Match } from '../decorators/match.decorator';
 
@@ -37,7 +37,7 @@ class UserFlukeDTO {
   firmPassword?: string;
 
   @IsNotEmpty({ message: 'Campo obrigatório' })
-  @IsDate({ message: 'Campo deve ser uma data válida' })
+  @IsDateString({ message: 'Campo deve ser uma data válida' })
   birthDate?: string;
 
   @IsBoolean()
