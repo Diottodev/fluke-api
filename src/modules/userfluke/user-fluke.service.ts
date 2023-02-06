@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
 import UserFlukeDTO from 'src/dtos/user-fluke-dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserFlukeService {
@@ -13,13 +14,32 @@ export class UserFlukeService {
       },
     });
 
+    const saltOrRounds = 10;
+
+    const hash = await bcrypt.hash(createUserFluke.password, saltOrRounds);
+    const firmHash = await bcrypt.hash(
+      createUserFluke.firmPassword,
+      saltOrRounds,
+    );
+
+    createUserFluke.password = hash;
+    createUserFluke.firmPassword = firmHash;
+
     if (emailExist) {
-      throw new Error('Email ja cadastrado');
+      return {
+        response: false,
+        message: 'Email já cadastrado',
+        data: [],
+      };
     }
 
     const user = await this.prisma.userFluke.create({ data: createUserFluke });
 
-    return user;
+    return {
+      response: true,
+      message: 'Conta cadastrada com sucesso',
+      data: user,
+    };
   }
   //implement user search in the future
   findAll() {

@@ -1,6 +1,6 @@
 import {
   IsNotEmpty,
-  IsDate,
+  IsDateString,
   Length,
   IsEmail,
   IsString,
@@ -37,7 +37,7 @@ class UserFlukeDTO {
   firmPassword?: string;
 
   @IsNotEmpty({ message: 'Campo obrigatório' })
-  @IsDate({ message: 'Campo deve ser uma data válida' })
+  @IsDateString({ message: 'Campo deve ser uma data válida' })
   birthDate?: string;
 
   @IsBoolean()
