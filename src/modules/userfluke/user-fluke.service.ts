@@ -74,8 +74,8 @@ export class UserFlukeService {
     });
     if (!user) {
       return {
-        message: 'Usuario não encontrado',
         response: false,
+        message: 'Usuario não encontrado',
         data: [],
       };
     }
@@ -95,7 +95,7 @@ export class UserFlukeService {
       },
     });
     return {
-      message: 'Usuario encontrado',
+      message: 'Perfil editado com sucesso',
       response: true,
       user: updateUser,
     };
@@ -109,11 +109,17 @@ export class UserFlukeService {
     });
     if (!user) {
       return {
-        message: 'Usuario não encontrado',
         response: false,
+        message: 'Usuario não encontrado',
         data: [],
       };
     }
-    return this.prisma.userFluke.delete({ where: { id } });
+    const deleteUser = await this.prisma.userFluke.delete({ where: { id } });
+
+    return {
+      message: 'Conta deletada com sucesso!',
+      response: true,
+      user: deleteUser,
+    };
   }
 }
