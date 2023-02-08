@@ -6,7 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import UserFlukeDTO from 'src/dtos/user-fluke-dto';
 import { UserFlukeService } from './user-fluke.service';
 
@@ -15,8 +18,13 @@ export class UserFlukeController {
   constructor(private readonly userFlukeService: UserFlukeService) {}
 
   @Post()
-  create(@Body() createUserFluke: UserFlukeDTO) {
-    return this.userFlukeService.create(createUserFluke);
+  async create(@Body() createUserFluke: UserFlukeDTO, @Res() res: Response) {
+    const result = await this.userFlukeService.create(createUserFluke);
+
+    if (!result.response) {
+      return res.status(HttpStatus.BAD_REQUEST).send(result);
+    }
+    return res.status(HttpStatus.CREATED).send(result);
   }
 
   @Get()
@@ -25,17 +33,36 @@ export class UserFlukeController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userFlukeService.findOne(id);
+  async findOne(@Param('id') id: string, @Res() res: Response) {
+    const result = await this.userFlukeService.findOne(id);
+
+    if (!result.response) {
+      return res.status(HttpStatus.BAD_REQUEST).send(result);
+    }
+    return res.status(HttpStatus.CREATED).send(result);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserFluke: UserFlukeDTO) {
-    return this.userFlukeService.update(id, updateUserFluke);
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserFluke: UserFlukeDTO,
+    @Res() res: Response,
+  ) {
+    const result = await this.userFlukeService.update(id, updateUserFluke);
+
+    if (!result.response) {
+      return res.status(HttpStatus.BAD_REQUEST).send(result);
+    }
+    return res.status(HttpStatus.CREATED).send(result);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userFlukeService.remove(id);
+  async remove(@Param('id') id: string, @Res() res: Response) {
+    const result = await this.userFlukeService.remove(id);
+
+    if (!result.response) {
+      return res.status(HttpStatus.BAD_REQUEST).send(result);
+    }
+    return res.status(HttpStatus.CREATED).send(result);
   }
 }
