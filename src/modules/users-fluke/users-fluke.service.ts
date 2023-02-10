@@ -1,49 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
-import UserFlukeDTO from 'src/dtos/user-fluke-dto';
+import { CreateUsersFlukeInput } from './dto/create-users-fluke.input';
+import { UpdateUsersFlukeInput } from './dto/update-users-fluke.input';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UserFlukeService {
+export class UsersFlukeService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createUserFluke: UserFlukeDTO) {
+  async create(createUsersFlukeInput: CreateUsersFlukeInput) {
+    console.log(2);
+
     const emailExist = await this.prisma.userFluke.findFirst({
       where: {
-        email: createUserFluke.email,
+        email: createUsersFlukeInput.email,
       },
     });
 
-    const saltOrRounds = 10;
+    if (!emailExist) {
+      const saltOrRounds = 10;
 
-    const hash = await bcrypt.hash(createUserFluke.password, saltOrRounds);
-    const firmHash = await bcrypt.hash(
-      createUserFluke.firmPassword,
-      saltOrRounds,
-    );
+      const hash = await bcrypt.hash(
+        createUsersFlukeInput.password,
+        saltOrRounds,
+      );
 
-    createUserFluke.password = hash;
-    createUserFluke.firmPassword = firmHash;
+      createUsersFlukeInput.password = hash;
 
-    if (emailExist) {
-      return {
-        response: false,
-        message: 'Email já cadastrado',
-        data: [],
-      };
+      const user = await this.prisma.userFluke.create({
+        data: createUsersFlukeInput,
+      });
+      console.log(4);
+
+      return user;
     }
-
-    const user = await this.prisma.userFluke.create({ data: createUserFluke });
-
     return {
+      message: 'Usuario encontrado',
       response: true,
-      message: 'Conta cadastrada com sucesso',
-      data: user,
+      data: [],
     };
   }
-  //implement user search in the future
+
   findAll() {
-    return `This action returns all users`;
+    return `This action returns all usersFluke`;
   }
 
   async findOne(id: string) {
@@ -66,7 +65,7 @@ export class UserFlukeService {
     };
   }
 
-  async update(id: string, updateUserFluke: UserFlukeDTO) {
+  async update(id: string, updateUsersFlukeInput: UpdateUsersFlukeInput) {
     const user = await this.prisma.userFluke.findUnique({
       where: {
         id,
@@ -84,14 +83,14 @@ export class UserFlukeService {
         id,
       },
       data: {
-        birthDate: updateUserFluke.birthDate,
-        bio: updateUserFluke.bio,
-        email: updateUserFluke.email,
-        firmPassword: updateUserFluke.firmPassword,
-        password: updateUserFluke.password,
-        isOnline: updateUserFluke.isOnline,
-        name: updateUserFluke.name,
-        lasName: updateUserFluke.lasName,
+        id: updateUsersFlukeInput.id,
+        birthDate: updateUsersFlukeInput.birthDate,
+        bio: updateUsersFlukeInput.bio,
+        email: updateUsersFlukeInput.email,
+        password: updateUsersFlukeInput.password,
+        isOn: updateUsersFlukeInput.isOn,
+        name: updateUsersFlukeInput.name,
+        lastName: updateUsersFlukeInput.lastName,
       },
     });
     return {
