@@ -2,24 +2,27 @@ import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
 export class UsersFluke {
-  @Field()
-  email: string;
+  @Field(() => String, { nullable: true })
+  id?: string;
 
-  @Field()
-  name: string;
+  @Field(() => String, { nullable: true })
+  email?: string;
 
-  @Field()
-  lastName: string;
+  @Field(() => String, { nullable: true })
+  name?: string;
 
-  @Field()
-  bio: string;
+  @Field(() => String, { nullable: true })
+  lastName?: string;
 
-  @Field()
-  isOn: boolean;
+  @Field(() => String, { nullable: true })
+  bio?: string;
 
-  @Field()
-  password: string;
+  @Field(() => Boolean, { nullable: true })
+  isOn?: boolean;
 
-  @Field()
-  birthDate: string;
+  @Field(() => String, { nullable: true })
+  password?: string;
+
+  @Field(() => String, { nullable: true })
+  birthDate?: string;
 }

@@ -1,47 +1,127 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UsersFlukeService } from './users-fluke.service';
-import { UsersFluke } from './entities/users-fluke.entity';
 import { UpdateUsersFlukeInput } from './dto/update-users-fluke.input';
-import { DataOutput } from './dto/data-users-fluke.output';
+import { DataUsersFlukeOutput } from './dto/data-users-fluke.output';
+import { DataOutputUsersFluke } from './entities/data-output-users-fluke';
+import { CreateUsersFlukeInput } from './dto/create-users-fluke.input';
+import * as bcrypt from 'bcrypt';
 
-@Resolver()
+@Resolver(() => DataOutputUsersFluke)
 export class UsersFlukeResolver {
   constructor(private readonly usersFlukeService: UsersFlukeService) {}
 
-  @Mutation(() => UsersFluke)
-  async createUsersFluke(@Args('data') data: DataOutput) {
-    console.log(1);
+  @Mutation(() => DataOutputUsersFluke)
+  async createUsersFluke(
+    @Args('data') data: CreateUsersFlukeInput,
+  ): Promise<DataUsersFlukeOutput> {
+    try {
+      const result = await this.usersFlukeService.findOneEmail(data.email);
 
-    await this.usersFlukeService.create(data.data);
-    return {
-      data: data.data,
-      response: data.response,
-      message: data.message,
-    };
+      if (result === null) {
+        const saltOrRounds = 10;
+        const password = data.password;
+
+        const hash = await bcrypt.hash(password, saltOrRounds);
+        data.password = hash;
+
+        const user = await this.usersFlukeService.create(data);
+
+        return {
+          message: 'Conta cadastrada com sucesso!',
+          response: true,
+          data: user,
+        };
+      }
+      if (result.email === data.email)
+        return {
+          message: 'Ops. Email em uso por outro usuário!',
+          response: false,
+          data: null,
+        };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  @Query(() => [UsersFluke], { name: 'usersFluke' })
+  @Query(() => [DataOutputUsersFluke], { name: 'usersFlukeAll' })
   findAll() {
     return this.usersFlukeService.findAll();
   }
 
-  @Query(() => UsersFluke, { name: 'usersFluke' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.usersFlukeService.findOne(id);
+  @Query(() => DataOutputUsersFluke, { name: 'usersFluke' })
+  async findOne(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<DataUsersFlukeOutput> {
+    try {
+      const result = await this.usersFlukeService.findOneById(id);
+
+      if (result === null)
+        return {
+          message: 'Usuário não encontrado!',
+          response: false,
+          data: null,
+        };
+      if (result.id === id)
+        return {
+          message: 'Usuário encontrado com sucesso!',
+          response: true,
+          data: result,
+        };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  @Mutation(() => UsersFluke)
-  updateUsersFluke(
-    @Args('updateUsersFlukeInput') updateUsersFlukeInput: UpdateUsersFlukeInput,
-  ) {
-    return this.usersFlukeService.update(
-      updateUsersFlukeInput.id,
-      updateUsersFlukeInput,
-    );
+  @Mutation(() => DataOutputUsersFluke)
+  async updateUsersFluke(
+    @Args('data') data: UpdateUsersFlukeInput,
+  ): Promise<DataUsersFlukeOutput> {
+    try {
+      const result = await this.usersFlukeService.findOneEmail(data.email);
+
+      if (result === null) {
+        const updateUser = await this.usersFlukeService.update(data.id, data);
+
+        return {
+          message: 'Conta editada com sucesso!',
+          response: true,
+          data: updateUser,
+        };
+      }
+      if (result.email === data.email)
+        return {
+          message: 'Ops. usuário não encontrado!',
+          response: false,
+          data: null,
+        };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  @Mutation(() => UsersFluke)
-  removeUsersFluke(@Args('id', { type: () => String }) id: string) {
-    return this.usersFlukeService.remove(id);
+  @Mutation(() => DataOutputUsersFluke)
+  async removeUsersFluke(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<DataUsersFlukeOutput> {
+    try {
+      const result = await this.usersFlukeService.findOneById(id);
+
+      if (result === null)
+        return {
+          message: 'Usuário não encontrado!',
+          response: false,
+          data: null,
+        };
+      if (result.id === id) {
+        const deleteUSer = await this.usersFlukeService.remove(id);
+        return {
+          message: `Usuário ${deleteUSer.name} ${deleteUSer.lastName} deletado com sucesso!`,
+          response: true,
+          data: null,
+        };
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
