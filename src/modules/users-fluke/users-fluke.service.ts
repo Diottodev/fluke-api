@@ -9,7 +9,7 @@ export class UsersFlukeService {
 
   async create(createUsersFlukeInput: CreateUsersFlukeInput) {
     const user = await this.prisma.userFluke.create({
-      data: createUsersFlukeInput,
+      data: createUsersFlukeInput as unknown,
     });
 
     return user;

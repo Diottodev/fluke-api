@@ -19,7 +19,7 @@ model UserFluke {
   birthDate  String?
   isOn       Boolean?
   bio        String?
-  PostsFluke PostsFluke[]
+  postsFluke PostsFluke[]
 }
 
 model PostsFluke {

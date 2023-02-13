@@ -1,4 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { PostsFluke } from 'src/modules/posts-fluke/entities/posts-fluke.entity';
 
 @ObjectType()
 export class UsersFluke {
@@ -25,4 +26,7 @@ export class UsersFluke {
 
   @Field(() => String, { nullable: true })
   birthDate?: string;
+
+  @Field(() => [PostsFluke], { nullable: true })
+  PostsFluke: [PostsFluke];
 }

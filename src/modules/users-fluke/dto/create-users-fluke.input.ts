@@ -2,6 +2,15 @@ import { InputType, Field } from '@nestjs/graphql';
 import { IsBoolean, IsDateString, IsEmail, Length } from 'class-validator';
 
 @InputType()
+export class PostCreateInput {
+  @Field()
+  title: string;
+
+  @Field({ nullable: true })
+  content: string;
+}
+
+@InputType()
 export class CreateUsersFlukeInput {
   @Field()
   @IsEmail()
@@ -29,4 +38,7 @@ export class CreateUsersFlukeInput {
   @IsDateString()
   @Field()
   birthDate?: string;
+
+  @Field({ nullable: true })
+  postsFluke?: PostCreateInput;
 }
