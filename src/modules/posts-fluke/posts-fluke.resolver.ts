@@ -1,9 +1,17 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { PostsFlukeService } from './posts-fluke.service';
 import { UpdatePostsFlukeInput } from './dto/update-posts-fluke.input';
 import { DataPostsFlukeOutput } from './dto/data-posts-fluke.output';
 import { DataOutputPostsFluke } from './entities/data-output-posts-fluke';
 import { CreatePostsFlukeInput } from './dto/create-posts-fluke.input';
+import { UsersFluke } from '../users-fluke/entities/users-fluke.entity';
 
 @Resolver(() => DataOutputPostsFluke)
 export class PostsFlukeResolver {
@@ -53,6 +61,13 @@ export class PostsFlukeResolver {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  @ResolveField(() => UsersFluke, { name: 'postAuthor' })
+  async author(@Parent() email: string) {
+    console.log(email, 5);
+
+    return this.postsFlukeService.getAuthor(email);
   }
 
   @Mutation(() => DataOutputPostsFluke)

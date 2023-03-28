@@ -1,4 +1,11 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { UsersFlukeService } from './users-fluke.service';
 import { UpdateUsersFlukeInput } from './dto/update-users-fluke.input';
 import { DataUsersFlukeOutput } from './dto/data-users-fluke.output';
@@ -41,6 +48,11 @@ export class UsersFlukeResolver {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  @ResolveField(() => [DataOutputUsersFluke], { name: 'postsUserFluke' })
+  async findPostsUser(@Parent() user) {
+    return this.usersFlukeService.findManyPosts(user.id);
   }
 
   @Query(() => [DataOutputUsersFluke], { name: 'usersFlukeAll' })

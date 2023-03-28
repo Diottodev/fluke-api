@@ -21,9 +21,18 @@ export class PostsFlukeService {
     return post;
   }
 
+  async getAuthor(email: string) {
+    const author = await this.prisma.userFluke.findUnique({
+      where: { email },
+    });
+    console.log(author, 2);
+
+    return author;
+  }
+
   async findAll() {
     const posts = await this.prisma.postsFluke.findMany();
-    console.log(posts);
+    console.log(posts, 2);
     return posts;
   }
 

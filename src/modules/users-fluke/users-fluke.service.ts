@@ -21,6 +21,14 @@ export class UsersFlukeService {
     return users;
   }
 
+  async findManyPosts(id: string) {
+    const posts = await this.prisma.postsFluke.findMany({
+      where: { authorId: id },
+    });
+    console.log(posts);
+    return posts;
+  }
+
   async findOneById(id: string) {
     const user = await this.prisma.userFluke.findUnique({
       where: {
