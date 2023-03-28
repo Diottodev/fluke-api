@@ -9,7 +9,7 @@ export class UsersFlukeService {
 
   async create(createUsersFlukeInput: CreateUsersFlukeInput) {
     const user = await this.prisma.userFluke.create({
-      data: createUsersFlukeInput,
+      data: createUsersFlukeInput as unknown,
     });
 
     return user;
@@ -19,6 +19,14 @@ export class UsersFlukeService {
     const users = await this.prisma.userFluke.findMany();
     console.log(users);
     return users;
+  }
+
+  async findManyPosts(id: string) {
+    const posts = await this.prisma.postsFluke.findMany({
+      where: { authorId: id },
+    });
+    console.log(posts);
+    return posts;
   }
 
   async findOneById(id: string) {
